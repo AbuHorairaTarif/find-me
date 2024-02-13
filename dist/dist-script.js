@@ -10,7 +10,7 @@ var currentMarker = L.marker([0, 0]).addTo(map);
 var lineGroup = L.layerGroup().addTo(map);
 
 var totalDistance = 0;
-var minDistanceThreshold = 3; // set your minimum distance threshold in meters
+var minDistanceThreshold = 5; // set your minimum distance threshold in meters
 
 function updateLocation(position) {
     var latlng = [position.coords.latitude, position.coords.longitude];
