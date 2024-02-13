@@ -16,48 +16,51 @@
     <!-- Leaflet-Geocoding Plugin -->
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
-      var map = L.map("map").setView([0, 0], 2);
-      // Add a tile layer (you can choose another provider)
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
+      // script.js
 
-      var geocoder = L.Control.Geocoder.nominatim();
-      var control = L.Control.geocoder({
-        geocoder: geocoder,
-      }).addTo(map);
+var map = L.map('map').setView([0, 0], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
 
-      var jsonData = [
-        { name: "Location1", lat: 40.7128, lon: -74.006 },
-        { name: "Location2", lat: 34.0522, lon: -118.2437 },
-        // Add more locations as needed
-      ];
+var markers = [];
+var lineGroup = L.layerGroup().addTo(map);
 
-      // Function to add markers to the map
-      function addMarkers(data) {
-        data.forEach(function (location) {
-          var marker = L.marker([location.lat, location.lon]).addTo(map);
-          marker.bindPopup(location.name);
-        });
-      }
+function updateLocation(position) {
+    var latlng = [position.coords.latitude, position.coords.longitude];
 
-      // Add markers to the map
-      addMarkers(jsonData);
+    // Create a new marker for the current position
+    var currentMarker = L.marker(latlng).addTo(map);
+    markers.push(currentMarker);
 
-      function searchLocation(locationName) {
-        geocoder.geocode(locationName, function (results) {
-          if (results.length > 0) {
-            var result = results[0];
-            map.setView(result.center, 10); // Set the zoom level as needed
-            L.marker(result.center)
-              .addTo(map)
-              .bindPopup(locationName)
-              .openPopup();
-          } else {
-            alert("Location not found");
-          }
-        });
-      }
+    // Connect the new marker with the previous one by adding a line
+    if (markers.length > 1) {
+        var line = L.polyline([markers[markers.length - 2].getLatLng(), latlng], { color: 'green' });
+        lineGroup.addLayer(line);
+    }
+
+    // Pan the map to the updated position
+    map.panTo(latlng);
+}
+
+function handleLocationError(error) {
+    console.error(`Error getting location: ${error.message}`);
+}
+
+function zoomIn() {
+    map.zoomIn();
+}
+
+function zoomOut() {
+    map.zoomOut();
+}
+
+if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(updateLocation, handleLocationError);
+} else {
+    alert('Geolocation is not supported by your browser.');
+}
+
     </script>
   </body>
 </html>

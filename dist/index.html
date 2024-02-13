@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Live Location Tracking</title>
+    <style>
+        #map {
+            height: 400px;
+            position: relative;
+            z-index: -1;
+        }
+
+        #zoom-buttons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 5px 10px;
+        }
+
+        #distance {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            font-weight: bold;
+            z-index: 400;
+            padding: 10px 15px 10px 5px;
+            color:#fff; 
+            background-color: rgb(9, 20, 3); 
+            z-index: 300;
+        }
+
+        #zoom-buttons button {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="zoom-buttons">
+        <button onclick="zoomIn()" style="padding: 5px 10px;">Zoom In</button>
+        <button onclick="zoomOut()" style="padding: 5px 10px;">Zoom Out</button>
+    </div>
+    <div id="distance">Total Distance: 0 meters</div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="dist-script.js"></script>
+</body>
+</html>

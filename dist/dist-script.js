@@ -5,8 +5,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var startMarker = L.marker([0, 0]).addTo(map);
 var currentMarker = L.marker([0, 0]).addTo(map);
-
 var lineGroup = L.layerGroup().addTo(map);
+
+var totalDistance = 0;
 
 function updateLocation(position) {
     var latlng = [position.coords.latitude, position.coords.longitude];
@@ -14,14 +15,21 @@ function updateLocation(position) {
     // Update current marker position
     currentMarker.setLatLng(latlng);
 
-    // Create and append a line to connect the start and current positions
+    // Update distance
     if (startMarker.getLatLng().equals([0, 0])) {
         startMarker.setLatLng(latlng);
     } else {
-        var line = L.polyline([startMarker.getLatLng(), latlng], { color: 'red' });
-        lineGroup.addLayer(line);
+        var distance = startMarker.getLatLng().distanceTo(latlng); // in meters
+        totalDistance += distance;
         startMarker.setLatLng(latlng);
+
+        // Update the displayed total distance
+        document.getElementById('distance').innerText = 'Total Distance: ' + totalDistance.toFixed(2) + ' meters';
     }
+
+    // Create and append a line to connect the start and current positions
+    var line = L.polyline([startMarker.getLatLng(), latlng], { color: 'blue' });
+    lineGroup.addLayer(line);
 
     // Pan the map to the updated position
     map.panTo(latlng);
