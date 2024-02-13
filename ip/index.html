@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="ip-info"></div>
+    <script>
+      const ipInfo = document.getElementById("ip-info");
+
+      async function fetchMovies() {
+        const response = await fetch("http://ip-api.com/json/?fields=61439");
+        let data = await response.json();
+        // waits until the request completes...
+        // console.log(data);
+
+        return data;
+      }
+      const myData = fetchMovies();
+      myData.then(
+            myData.forEach(data => {
+                console.log(data);
+            }));
+    </script>
+  </body>
+</html>

@@ -10,23 +10,25 @@ var currentMarker = L.marker([0, 0]).addTo(map);
 var lineGroup = L.layerGroup().addTo(map);
 
 var totalDistance = 0;
-var lastPosition = null;
-var distanceThreshold = 3; // Set your desired threshold in meters
+var initialPositionSet = false;
 
 function updateLocation(position) {
     var latlng = [position.coords.latitude, position.coords.longitude];
 
-    // Ignore small movements
-    if (lastPosition !== null) {
-        var distance = lastPosition.distanceTo(latlng);
-        if (distance < distanceThreshold) {
-            return;
-        }
-        totalDistance += distance;
+    // Set the initial position if it hasn't been set yet
+    if (!initialPositionSet) {
+        startMarker.setLatLng(latlng);
+        initialPositionSet = true;
+        return;
     }
 
     // Update current marker position
     currentMarker.setLatLng(latlng);
+
+    // Calculate and update distance
+    var distance = startMarker.getLatLng().distanceTo(latlng); // in meters
+    totalDistance += distance;
+    startMarker.setLatLng(latlng);
 
     // Update the displayed total distance
     document.getElementById('distance').innerText = 'Total Distance: ' + totalDistance.toFixed(2) + ' meters';
@@ -37,9 +39,6 @@ function updateLocation(position) {
 
     // Pan the map to the updated position
     map.panTo(latlng);
-
-    // Update last position
-    lastPosition = latlng;
 }
 
 function handleLocationError(error) {
