@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body>
+    <div id="map" style="height: 400px"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Leaflet-Geocoding Plugin -->
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+      var map = L.map("map").setView([0, 0], 2);
+      // Add a tile layer (you can choose another provider)
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      var geocoder = L.Control.Geocoder.nominatim();
+      var control = L.Control.geocoder({
+        geocoder: geocoder,
+      }).addTo(map);
+
+      var jsonData = [
+        { name: "Location1", lat: 40.7128, lon: -74.006 },
+        { name: "Location2", lat: 34.0522, lon: -118.2437 },
+        // Add more locations as needed
+      ];
+
+      // Function to add markers to the map
+      function addMarkers(data) {
+        data.forEach(function (location) {
+          var marker = L.marker([location.lat, location.lon]).addTo(map);
+          marker.bindPopup(location.name);
+        });
+      }
+
+      // Add markers to the map
+      addMarkers(jsonData);
+
+      function searchLocation(locationName) {
+        geocoder.geocode(locationName, function (results) {
+          if (results.length > 0) {
+            var result = results[0];
+            map.setView(result.center, 10); // Set the zoom level as needed
+            L.marker(result.center)
+              .addTo(map)
+              .bindPopup(locationName)
+              .openPopup();
+          } else {
+            alert("Location not found");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
